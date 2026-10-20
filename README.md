@@ -19,4 +19,3 @@ Distributed fraud detection pipeline using Apache Spark MLlib and Scala on credi
 1. Clone the repository:
    ```bash
    git clone <repo-url>
-
