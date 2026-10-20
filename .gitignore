@@ -1,32 +1,35 @@
-<<<<<<< HEAD
-*.class
-*.tasty
-*.log
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-=======
-# Target and compiled build files
-bin/
+# Scala / SBT build outputs
 target/
+project/target/
+project/project/
 *.class
 *.jar
+*.tasty
 
-# IDE and metadata files
+# Scala tooling and IDE metadata
+.bsp/
+.bloop/
+.metals/
+.cache/
+.idea/
+*.iml
 .metadata/
 .settings/
 .project
 .classpath
-.cache
-.bsp/
-.idea/
-*.iml
-.DS_Store
+.vscode/
 
-# Data and local model outputs (Never push large datasets or parquet files)
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Logs and JVM crash reports
+*.log
+hs_err_pid*
+
+# Local datasets and generated artifacts
 data/
 *.csv
 *.parquet
 output/
 models_checkpoint/
->>>>>>> 3d5f155 (Initial repository skeleton with project structure, README, and .gitignore)
