@@ -29,4 +29,7 @@ data/
 *.parquet
 output/
 models_checkpoint/
-3d5f155 (Initial repository skeleton with project structure, README, and .gitignore)
+
+.metals/
+.scala-build/
+.vscode/
