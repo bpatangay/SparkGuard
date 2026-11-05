@@ -1,4 +1,4 @@
-package sparkguard
+package sparkguard.models
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.ml.feature.VectorAssembler
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
@@ -30,9 +30,10 @@ object RandomForestRealData {
         .withColumnRenamed("Class", "label")
       // This split is for a standalone local experiment.
       // Coordinate with the team before replacing shared splits.
-      val Array(trainingData, testData) =
-        assembledData.randomSplit(Array(0.8, 0.2), seed = 42L)
+      val Array(trainingData, validationData, testData) =
+        assembledData.randomSplit(Array(0.7, 0.15, 0.15), seed = 1234L)
       println(s"Training rows: ${trainingData.count()}")
+      println(s"Validation rows: ${validationData.count()}")
       println(s"Test rows: ${testData.count()}")
       // Train the Random Forest model.
       val classifier = FraudDetectionModel.buildClassifier(

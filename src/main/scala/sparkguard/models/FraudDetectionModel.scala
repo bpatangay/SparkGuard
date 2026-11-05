@@ -1,4 +1,4 @@
-package sparkguard
+package sparkguard.models
 import org.apache.spark.ml.classification.{
   RandomForestClassificationModel,
   RandomForestClassifier
