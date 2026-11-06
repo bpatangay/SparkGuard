@@ -1,4 +1,4 @@
-# SparkGuard - Neural Network Results
+# SparkGuard - Voting Ensemble Results
 
 ## 1. Overview
 
