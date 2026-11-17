@@ -1,7 +1,9 @@
 package sparkguard.models
+
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.ml.feature.VectorAssembler
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
 object RandomForestRealData {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder()
@@ -58,6 +60,21 @@ object RandomForestRealData {
           .setMetricName("accuracy")
 
       val accuracy = accuracyEvaluator.evaluate(predictions)
+      // Evaluate ROC-AUC.
+      val rocEvaluator = new BinaryClassificationEvaluator()
+        .setLabelCol("label")
+        .setRawPredictionCol("rawPrediction")
+        .setMetricName("areaUnderROC")
+
+      val rocAUC = rocEvaluator.evaluate(predictions)
+
+      // Evaluate PR-AUC.
+      val prEvaluator = new BinaryClassificationEvaluator()
+        .setLabelCol("label")
+        .setRawPredictionCol("rawPrediction")
+        .setMetricName("areaUnderPR")
+
+      val prAUC = prEvaluator.evaluate(predictions)
 
       // Calculate the confusion matrix.
       val truePositives = predictions
@@ -95,13 +112,15 @@ object RandomForestRealData {
 
       println("\n========== RANDOM FOREST RESULTS ==========")
       println(f"Accuracy:       ${accuracy * 100}%.4f%%")
+      println(f"ROC-AUC:        ${rocAUC}%.4f")
+      println(f"PR-AUC:         ${prAUC}%.4f")
       println()
       println("Fraud-class metrics:")
       println(f"Precision:      ${fraudPrecision * 100}%.4f%%")
       println(f"Recall:         ${fraudRecall * 100}%.4f%%")
       println(f"F1 score:       ${fraudF1 * 100}%.4f%%")
       println()
-      println("Confusion matrix:")
+      println("Confusion mastrix:")
       println(f"True positives (fraud detected):     $truePositives%d")
       println(f"False positives (legitimate flagged): $falsePositives%d")
       println(f"True negatives (legitimate cleared): $trueNegatives%d")
