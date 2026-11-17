@@ -20,6 +20,8 @@ Accuracy: 99.9413%
 Precision: 93.6170%
 Recall: 66.6667%
 F1 Score: 77.8761%
+ROC-AUC: 0.956209
+PR-AUC: 0.791736
 
 Confusion Matrix:
 True Positives (Fraud detected): 44
@@ -38,3 +40,4 @@ Note: this test set had 42,602 rows (66 fraud), which differs from the SVM test 
 5. Next Steps
 
 Compare these results with the other models on the same test split to determine the most effective solution.
+

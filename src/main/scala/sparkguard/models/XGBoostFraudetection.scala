@@ -3,6 +3,7 @@ package sparkguard
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.col
 import org.apache.spark.ml.linalg.{Vector => MLVector}
+import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
 import ml.dmlc.xgboost4j.scala.spark.XGBoostClassifier
 
 object XGBoostRealData {
@@ -71,13 +72,21 @@ object XGBoostRealData {
 
       //With the best threshold, evaluate the model on the test set.
       val bestThreshold = best._1
-      val predictions = model.transform(testDF)
+      val scoresAndLabelsTest = model.transform(testDF)
         .select("probability", "label")
         .rdd
         .map { row =>
-          val score = row.getAs[MLVector]("probability")(1)
-          (if (score >= bestThreshold) 1.0 else 0.0, row.getAs[Double]("label"))
+          (row.getAs[MLVector]("probability")(1), row.getAs[Double]("label"))
         }.cache()
+
+      val predictions = scoresAndLabelsTest.map { case (score, label) =>
+        (if (score >= bestThreshold) 1.0 else 0.0, label)
+      }.cache()
+
+      //ROC-AUC and PR-AUC use the continuous scores, not the thresholded predictions
+      val binaryMetrics = new BinaryClassificationMetrics(scoresAndLabelsTest)
+      val rocAuc = binaryMetrics.areaUnderROC()
+      val prAuc = binaryMetrics.areaUnderPR()
 
       // Calculate the confusion matrix.
       val truePositives = predictions.filter{case (prediction, label) => prediction == 1.0 && label == 1.0}.count()
@@ -105,6 +114,8 @@ object XGBoostRealData {
       println(f"Precision:      ${fraudPrecision * 100}%.4f%%")
       println(f"Recall:         ${fraudRecall * 100}%.4f%%")
       println(f"F1 score:       ${fraudF1 * 100}%.4f%%")
+      println(f"ROC-AUC:        $rocAuc%.6f")
+      println(f"PR-AUC:         $prAuc%.6f")
       println()
       println("Confusion matrix:")
       println(f"True positives (fraud detected):     $truePositives%d")
