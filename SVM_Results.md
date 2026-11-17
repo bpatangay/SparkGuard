@@ -19,6 +19,8 @@ Accuracy: 99.9297%
 Precision: 84.8837%
 Recall: 81.1111%
 F1 Score: 82.9545%
+ROC-AUC: 0.905403
+PR-AUC: 0.768868
 
 Confusion Matrix:
 True Positives (Fraud detected): 73

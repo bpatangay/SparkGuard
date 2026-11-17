@@ -293,6 +293,10 @@ val fraudRecall =if (truePositives + falseNegatives > 0) truePositives.toDouble 
 
 val fraudF1 = if (fraudPrecision + fraudRecall > 0) 2.0 * fraudPrecision * fraudRecall /(fraudPrecision + fraudRecall) else 0.0
 
+val binaryMetrics = new BinaryClassificationMetrics(ensemblePredictions)
+val rocAuc = binaryMetrics.areaUnderROC()
+val prAuc = binaryMetrics.areaUnderPR()
+
   println("\n========== ENSEMBLE RESULTS ==========")
   println(f"Accuracy:       ${accuracy * 100}%.4f%%")
   println()
@@ -300,6 +304,8 @@ val fraudF1 = if (fraudPrecision + fraudRecall > 0) 2.0 * fraudPrecision * fraud
   println(f"Precision:      ${fraudPrecision * 100}%.4f%%")
   println(f"Recall:         ${fraudRecall * 100}%.4f%%")
   println(f"F1 score:       ${fraudF1 * 100}%.4f%%")
+  println(f"ROC-AUC:           $rocAuc%.6f")
+  println(f"PR-AUC:            $prAuc%.6f")
   println()
   println("Confusion matrix:")
   println(f"True positives (fraud detected):     $truePositives%d")
